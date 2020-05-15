@@ -104,6 +104,12 @@ void loadBugsData(vector<Bug*>& bug_vector)
     }
 }
 
+void initialiseBugBoard(vector<Bug*>& bug_vector)
+{
+    cout << "\nOption: Initialise Bug Board\n\n";
+    loadBugsData(bug_vector);
+}
+
 void displayAllBugs(vector<Bug*>& bug_vector)
 {
     cout << "\nOption: Display All Bugs\n\nList of bugs:\n";
@@ -119,7 +125,7 @@ void displayAllBugs(vector<Bug*>& bug_vector)
             Bug* pBug = bug_vector[i];
             if (typeid(*pBug) == typeid(Crawler))
             {
-                cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "                    " << pBug->getStatus() << endl;
+                cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "                     " << pBug->getStatus() << endl;
             }
             else if (typeid(*pBug) == typeid(Hopper))
             {
@@ -147,7 +153,7 @@ Bug* searchByID(vector<Bug*>& bug_vector, int id)
 
 void findBug(vector<Bug*>& bug_vector)
 {
-    cout << "\nOption: Find Bug\n";
+    cout << "\nOption: Find a Bug\n";
     int id;
     string idStr;
     cout << "\nEnter bug ID: ";
@@ -164,7 +170,7 @@ void findBug(vector<Bug*>& bug_vector)
         if (typeid(*pBug) == typeid(Crawler))
         {
             cout << "ID    Type      Location   Size    Direction    Status\n";
-            cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "       " << pBug->getStatus() << endl;
+            cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "        " << pBug->getStatus() << endl;
         }
         else if (typeid(*pBug) == typeid(Hopper))
         {
@@ -175,7 +181,15 @@ void findBug(vector<Bug*>& bug_vector)
     }
 }
 
-
+void tapBugBoard(vector<Bug*>& bug_vector)
+{
+    cout << "\nOption: Tap the Bug Board\n";
+    for (Bug* pBug : bug_vector)
+    {
+        pBug->move();
+    }
+    cout << "\nAll bugs have moved!\n";
+}
 
 //void saveStudentData(vector<Student>& students)
 //{
@@ -225,9 +239,10 @@ void run()
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         switch (option)
         {
-        case 1: loadBugsData(bug_vector); break;
+        case 1: initialiseBugBoard(bug_vector); break;
         case 2: displayAllBugs(bug_vector); break;
         case 3: findBug(bug_vector); break;
+        case 4: tapBugBoard(bug_vector); break;
         case 7: cout << "\nGoodbye\n"; break;
         }
     } while (option != 7);

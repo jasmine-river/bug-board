@@ -23,13 +23,13 @@ void Hopper::move()
 		switch (direction)
 		{
 		case 1:
-			position.second = 0;
+			position.second = 0; break;
 		case 2:
-			position.first = 10;
+			position.first = 10; break;
 		case 3:
-			position.second = 10;
+			position.second = 10; break;
 		case 4:
-			position.first = 0;
+			position.first = 0; break;
 		}
 		path.push_back(position);
 	}
@@ -38,13 +38,13 @@ void Hopper::move()
 		switch (direction)
 		{
 		case 1:
-			position.second -= hopLength;
+			position.second -= hopLength; break;
 		case 2:
-			position.first += hopLength;
+			position.first += hopLength; break;
 		case 3:
-			position.second += hopLength;
+			position.second += hopLength; break;
 		case 4:
-			position.first -= hopLength;
+			position.first -= hopLength; break;
 		}
 		path.push_back(position);
 	}

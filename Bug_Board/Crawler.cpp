@@ -22,13 +22,13 @@ void Crawler::move()
 		switch (direction)
 		{
 		case 1:
-			position.second--;
+			position.second--; break;
 		case 2:
-			position.first++;
+			position.first++; break;
 		case 3:
-			position.second++;
+			position.second++; break;
 		case 4:
-			position.first--;
+			position.first--; break;
 		}
 		path.push_back(position);
 	}
