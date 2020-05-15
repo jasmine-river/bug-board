@@ -11,67 +11,6 @@
 #include <list>  /* list */
 using namespace std;
 
-void displayAllBugs(vector<Bug*>& bug_vector)
-{
-    cout << "\nOption: Display All Bugs\n\nList of bugs:\n";
-    if (bug_vector.size() == 0)
-    {
-        cout << "None\n";
-    }
-    else
-    {
-        cout << "ID    Type    Location    Size    Direction    Hop Length    Status\n";
-        for (int i = 0; i < bug_vector.size(); i++)
-        {
-            Bug* pBug = bug_vector[i];
-            if (typeid(*pBug) == typeid(Crawler))
-            {
-                cout << pBug->getID() << "  Crawler  " << pBug->getPositionInBrackets() << "  " << pBug->getSize() << "  " << pBug->getDirectionInText() << "  " << pBug->getStatus() << endl;
-            }
-            else if (typeid(*pBug) == typeid(Hopper))
-            {
-                // Dynamic casting
-                // Reference: https://www.learncpp.com/cpp-tutorial/12-9-dynamic-casting/
-                Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
-                cout << pHopper->getID() << "  Hopper  " << pHopper->getPositionInBrackets() << "  " << pHopper->getSize() << "  " << pHopper->getDirectionInText() << "  " << pHopper->getHopLength() << "  " << pHopper->getStatus() << endl;
-            }
-        }
-        cout << "(Total: " << bug_vector.size() << " bugs)\n";
-    }
-}
-
-//Student* searchByID(vector<Student>& students, int id)
-//{
-//    for (Student& s : students)
-//    {
-//        if (s.getStudentID() == id)
-//        {
-//            return &s;
-//        }
-//    }
-//    return nullptr;
-//}
-//
-//void findStudent(vector<Student>& students)
-//{
-//    cout << "\nOption: Find Student\n";
-//    int id;
-//    string idStr;
-//    cout << "\nEnter student ID: ";
-//    getline(cin, idStr);
-//    stringstream(idStr) >> id;
-//    Student* s = searchByID(students, id);
-//    if (s == nullptr)
-//    {
-//        cout << "\nStudent not found\n";
-//    }
-//    else
-//    {
-//        cout << "\nStudent details:\n";
-//        cout << *s;
-//    }
-//}
-
 bool parseLine(string const& line, vector<Bug*>& bug_vector)
 {
     bool success = false;
@@ -161,9 +100,82 @@ void loadBugsData(vector<Bug*>& bug_vector)
     }
     else
     {
-        cout << "[File doesn't exist; new file will be created on shutdown]\n";
+        cout << "[File doesn't exist]\n";
     }
 }
+
+void displayAllBugs(vector<Bug*>& bug_vector)
+{
+    cout << "\nOption: Display All Bugs\n\nList of bugs:\n";
+    if (bug_vector.size() == 0)
+    {
+        cout << "None\n";
+    }
+    else
+    {
+        cout << "ID    Type      Location   Size    Direction   Hop Length    Status\n";
+        for (int i = 0; i < bug_vector.size(); i++)
+        {
+            Bug* pBug = bug_vector[i];
+            if (typeid(*pBug) == typeid(Crawler))
+            {
+                cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "                    " << pBug->getStatus() << endl;
+            }
+            else if (typeid(*pBug) == typeid(Hopper))
+            {
+                // Dynamic casting
+                // Reference: https://www.learncpp.com/cpp-tutorial/12-9-dynamic-casting/
+                Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
+                cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatus() << endl;
+            }
+        }
+        cout << "(Total: " << bug_vector.size() << " bugs)\n";
+    }
+}
+
+Bug* searchByID(vector<Bug*>& bug_vector, int id)
+{
+    for (Bug* pBug : bug_vector)
+    {
+        if (pBug->getID() == id)
+        {
+            return pBug;
+        }
+    }
+    return nullptr;
+}
+
+void findBug(vector<Bug*>& bug_vector)
+{
+    cout << "\nOption: Find Bug\n";
+    int id;
+    string idStr;
+    cout << "\nEnter bug ID: ";
+    getline(cin, idStr);
+    stringstream(idStr) >> id;
+    Bug* pBug = searchByID(bug_vector, id);
+    if (pBug == nullptr)
+    {
+        cout << "\nBug not found\n";
+    }
+    else
+    {
+        cout << "\nBug details:\n";
+        if (typeid(*pBug) == typeid(Crawler))
+        {
+            cout << "ID    Type      Location   Size    Direction    Status\n";
+            cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "       " << pBug->getStatus() << endl;
+        }
+        else if (typeid(*pBug) == typeid(Hopper))
+        {
+            Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
+            cout << "ID    Type      Location   Size    Direction   Hop Length    Status\n";
+            cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatus() << endl;
+        }
+    }
+}
+
+
 
 //void saveStudentData(vector<Student>& students)
 //{
@@ -188,7 +200,7 @@ void run()
 {
     vector<Bug*> bug_vector;
 
-    cout << "\nWelcome to the Bug Board!\n";
+    cout << "Welcome to the Bug Board!\n";
     int option;
     do
     {
@@ -215,6 +227,7 @@ void run()
         {
         case 1: loadBugsData(bug_vector); break;
         case 2: displayAllBugs(bug_vector); break;
+        case 3: findBug(bug_vector); break;
         case 7: cout << "\nGoodbye\n"; break;
         }
     } while (option != 7);

@@ -58,7 +58,14 @@ string Bug::getPositionInBrackets()
 	return "(" + to_string(position.first) + "," + to_string(position.second) + ")";
 }
 
-bool Bug::getStatus()
+string Bug::getStatus()
 {
-	return alive;
+	if (alive)
+	{
+		return "alive";
+	}
+	else
+	{
+		return "dead";
+	}
 }

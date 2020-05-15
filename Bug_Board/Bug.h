@@ -22,5 +22,5 @@ public:
 	int getSize();
 	string getDirectionInText();
 	string getPositionInBrackets();
-	bool getStatus();
+	string getStatus();
 };
