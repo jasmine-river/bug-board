@@ -9,7 +9,20 @@
 #include <vector>
 #include <utility>  /* pair */
 #include <list>  /* list */
+#include <iomanip>  /* setw() */
 using namespace std;
+
+Bug* searchByID(vector<Bug*>& bug_vector, int id)
+{
+    for (Bug* pBug : bug_vector)
+    {
+        if (pBug->getID() == id)
+        {
+            return pBug;
+        }
+    }
+    return nullptr;
+}
 
 bool parseLine(string const& line, vector<Bug*>& bug_vector)
 {
@@ -42,11 +55,11 @@ bool parseLine(string const& line, vector<Bug*>& bug_vector)
         getline(strStream, field, ';');
         size = stoi(field);
 
+        Bug* pBug = nullptr;
+
         if (type == "C")
         {
-            Bug* pBug = new Crawler(id, x, y, direction, size);
-            bug_vector.push_back(pBug);
-            success = true;
+            pBug = new Crawler(id, x, y, direction, size);
         }
         else if (type == "H")
         {
@@ -54,7 +67,16 @@ bool parseLine(string const& line, vector<Bug*>& bug_vector)
             getline(strStream, field, ';');
             hopLength = stoi(field);
 
-            Bug* pBug = new Hopper(id, x, y, direction, size, hopLength);
+            pBug = new Hopper(id, x, y, direction, size, hopLength);
+        }
+
+        // check if bug ID exists before pushing; if bug ID exists then bug is duplicate
+        if (searchByID(bug_vector, id) != nullptr)
+        {
+            cout << "[Duplicate bug detected]<-";
+        }
+        else
+        {
             bug_vector.push_back(pBug);
             success = true;
         }
@@ -125,30 +147,18 @@ void displayAllBugs(vector<Bug*>& bug_vector)
             Bug* pBug = bug_vector[i];
             if (typeid(*pBug) == typeid(Crawler))
             {
-                cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "                     " << pBug->getStatus() << endl;
+                cout << left << setw(6) << pBug->getID() << setw(11) << "Crawler" << setw(11) << pBug->getPositionInBrackets() << setw(9) << pBug->getSize() << setw(24) << pBug->getDirectionInText() << pBug->getStatusInText() << endl;
             }
             else if (typeid(*pBug) == typeid(Hopper))
             {
                 // Dynamic casting
                 // Reference: https://www.learncpp.com/cpp-tutorial/12-9-dynamic-casting/
                 Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
-                cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatus() << endl;
+                cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatusInText() << endl;
             }
         }
         cout << "(Total: " << bug_vector.size() << " bugs)\n";
     }
-}
-
-Bug* searchByID(vector<Bug*>& bug_vector, int id)
-{
-    for (Bug* pBug : bug_vector)
-    {
-        if (pBug->getID() == id)
-        {
-            return pBug;
-        }
-    }
-    return nullptr;
 }
 
 void findBug(vector<Bug*>& bug_vector)
@@ -170,13 +180,13 @@ void findBug(vector<Bug*>& bug_vector)
         if (typeid(*pBug) == typeid(Crawler))
         {
             cout << "ID    Type      Location   Size    Direction    Status\n";
-            cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "        " << pBug->getStatus() << endl;
+            cout << pBug->getID() << "   Crawler    " << pBug->getPositionInBrackets() << "      " << pBug->getSize() << "       " << pBug->getDirectionInText() << "        " << pBug->getStatusInText() << endl;
         }
         else if (typeid(*pBug) == typeid(Hopper))
         {
             Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
             cout << "ID    Type      Location   Size    Direction   Hop Length    Status\n";
-            cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatus() << endl;
+            cout << pHopper->getID() << "   Hopper     " << pHopper->getPositionInBrackets() << "      " << pHopper->getSize() << "       " << pHopper->getDirectionInText() << "          " << pHopper->getHopLength() << "          " << pHopper->getStatusInText() << endl;
         }
     }
 }
@@ -189,6 +199,41 @@ void tapBugBoard(vector<Bug*>& bug_vector)
         pBug->move();
     }
     cout << "\nAll bugs have moved!\n";
+}
+
+void displayLifeHistory(vector<Bug*>& bug_vector)
+{
+    cout << "\nOption: Display Life History of All Bugs\n\nList of bugs:\n";
+    if (bug_vector.size() == 0)
+    {
+        cout << "None\n";
+    }
+    else
+    {
+        for (int i = 0; i < bug_vector.size(); i++)
+        {
+            Bug* pBug = bug_vector[i];
+            cout << pBug->getID();
+            if (typeid(*pBug) == typeid(Crawler))
+            {
+                cout << "   Crawler   ";
+            }
+            else if (typeid(*pBug) == typeid(Hopper))
+            {
+                cout << "   Hopper    ";
+            }
+            cout << "Path: " << pBug->getPathInText();
+            if (pBug->getStatusInText() == "Alive")
+            {
+                cout << ", Alive!\n";
+            }
+            else
+            {
+                cout << " Eaten by \n";
+            }
+        }
+        cout << "(Total: " << bug_vector.size() << " bugs)\n";
+    }
 }
 
 //void saveStudentData(vector<Student>& students)
@@ -243,6 +288,7 @@ void run()
         case 2: displayAllBugs(bug_vector); break;
         case 3: findBug(bug_vector); break;
         case 4: tapBugBoard(bug_vector); break;
+        case 5: displayLifeHistory(bug_vector); break;
         case 7: cout << "\nGoodbye\n"; break;
         }
     } while (option != 7);

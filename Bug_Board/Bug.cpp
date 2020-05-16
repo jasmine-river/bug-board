@@ -58,14 +58,28 @@ string Bug::getPositionInBrackets()
 	return "(" + to_string(position.first) + "," + to_string(position.second) + ")";
 }
 
-string Bug::getStatus()
+string Bug::getStatusInText()
 {
 	if (alive)
 	{
-		return "alive";
+		return "Alive";
 	}
 	else
 	{
-		return "dead";
+		return "Dead";
 	}
+}
+
+string Bug::getPathInText()
+{
+	string pathText;
+	list<pair<int, int>>::iterator it;
+	for (it = path.begin(); it != path.end(); it++)
+	{
+		pathText += "(" + to_string(it->first) + "," + to_string(it->second) + ")";
+
+		// Reference: https://dev-notes.eu/2018/07/first-&-last-element-in-c++-iterator-loop/
+		next(it) != path.end() ? (pathText += ",") : (pathText += "");
+	}	
+	return pathText;
 }
