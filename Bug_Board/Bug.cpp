@@ -2,6 +2,7 @@
 #include <list>  /* list */
 #include <utility>  /* pair */
 #include <string>
+#include <iostream>
 using namespace std;
 
 void Bug::move() {}
@@ -25,7 +26,10 @@ Bug::Bug(int id = 1, int x = 0, int y = 0, int direction = 1, int size = 1)
 	position.first = x;
 	position.second = y;
 	path.push_back(position);
+	killer = nullptr;
 }
+
+Bug::~Bug() {}
 
 // Getters & Setters
 int Bug::getID()

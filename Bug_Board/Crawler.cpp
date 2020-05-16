@@ -2,6 +2,7 @@
 #include <list>  /* list */
 #include <utility>  /* pair */
 #include <stdlib.h>  /* rand */
+#include <iostream>
 using namespace std;
 
 // Constructors
@@ -37,3 +38,5 @@ void Crawler::move()
 		}
 	}
 }
+
+Crawler::~Crawler() {}

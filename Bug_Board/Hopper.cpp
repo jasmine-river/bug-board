@@ -2,6 +2,7 @@
 #include <list>  /* list */
 #include <utility>  /* pair */
 #include <stdlib.h>  /* rand */
+#include <iostream>
 using namespace std;
 
 // Constructors
@@ -65,6 +66,8 @@ bool Hopper::canHopFullLength()
 		return true;
 	}
 }
+
+Hopper::~Hopper() {}
 
 // Getters
 int Hopper::getHopLength()

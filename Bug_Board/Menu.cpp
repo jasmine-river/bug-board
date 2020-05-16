@@ -71,7 +71,7 @@ bool parseLine(string const& line, vector<Bug*>& bug_vector)
             pBug = new Hopper(id, x, y, direction, size, hopLength);
         }
 
-        // check if bug ID exists before pushing; if bug ID exists then bug is duplicate
+        // Check if bug ID exists before pushing; if bug ID exists then bug is duplicate
         if (searchByID(bug_vector, id) != nullptr)
         {
             cout << "[Duplicate bug detected]<-";
@@ -292,15 +292,14 @@ map<pair<int, int>, list<Bug*>> tapBugBoard(vector<Bug*>& bug_vector, map<pair<i
 void displayLifeHistory(vector<Bug*>& bug_vector)
 {
     cout << "\nOption: Display Life History of All Bugs\n\nList of bugs:\n";
-    if (bug_vector.size() == 0)
+    if (bug_vector.empty())
     {
         cout << "None\n";
     }
     else
     {
-        for (int i = 0; i < bug_vector.size(); i++)
+        for (Bug* pBug : bug_vector)
         {
-            Bug* pBug = bug_vector[i];
             cout << pBug->getID();
             if (typeid(*pBug) == typeid(Crawler))
             {
@@ -367,21 +366,24 @@ void saveBugsData(vector<Bug*>& bug_vector)
     {
         for (Bug* pBug : bug_vector)
         {
+            outStream << pBug->getID();
             if (typeid(*pBug) == typeid(Crawler))
             {
-                outStream << "C;";
+                outStream << "   Crawler   ";
             }
             else if (typeid(*pBug) == typeid(Hopper))
             {
-                outStream << "H;";
+                outStream << "   Hopper    ";
             }
-            outStream << pBug->getID() << ";" << pBug->getPosition().first << ";" << pBug->getPosition().second << ";" << pBug->getDirection() << ";" << pBug->getSize() << ";";
-            if (typeid(*pBug) == typeid(Hopper))
+            outStream << "Path: " << pBug->getPathInText();
+            if (pBug->getStatusInText() == "Alive")
             {
-                Hopper* pHopper = dynamic_cast<Hopper*>(pBug);
-                outStream << pHopper->getHopLength();
+                outStream << ", Alive!\n";
             }
-            outStream << endl;
+            else
+            {
+                outStream << " Eaten by " << pBug->getKiller()->getID() << "\n";
+            }
         }
         outStream.close();
         cout << "\n[File saved successfully]\n";
@@ -434,5 +436,11 @@ void run()
 
     cout << "\nGoodbye\n";
 
-    // don't forget to delete the pointers
+    // Delete the pointers & free the memory
+    for (Bug* pBug : bug_vector)
+    {
+        delete pBug;
+    }
+    // Clear the contents of the vector
+    bug_vector.clear();
 }

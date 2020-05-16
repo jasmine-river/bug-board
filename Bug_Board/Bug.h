@@ -17,6 +17,7 @@ public:
 	virtual void move() = 0;
 	bool isWayBlocked();
 	Bug(int, int, int, int, int);
+	virtual ~Bug();
 
 	// Getters & Setters
 	int getID();

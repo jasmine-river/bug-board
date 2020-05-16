@@ -11,6 +11,7 @@ public:
 	Hopper(int, int, int, int, int, int);
 	virtual void move();
 	bool canHopFullLength();
+	~Hopper();
 
 	// Getters
 	int getHopLength();
