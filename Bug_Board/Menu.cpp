@@ -222,15 +222,25 @@ map<pair<int, int>, list<Bug*>> tapBugBoard(vector<Bug*>& bug_vector, map<pair<i
             bug_list.remove(pBug);
             bug_map.insert_or_assign(cell, bug_list);
 
-            pBug->move();
+            // Only move and add to cell again if alive
+            if (pBug->getStatusInText() == "Alive")
+            {
+                pBug->move();
 
-            // After move, add bug to the cell
-            cell = pBug->getPosition();
-            bug_list = bug_map[cell];
-            bug_list.push_back(pBug);
+                // After move, add bug to the cell
+                cell = pBug->getPosition();
+                bug_list = bug_map[cell];
+                bug_list.push_back(pBug);
+                bug_map.insert_or_assign(cell, bug_list);
+            }
+        }
+        cout << "\nAll bugs have moved! (except the dead ones)\n";
 
-            bug_map.insert_or_assign(cell, bug_list);
-
+        // Eat functionality
+        for (const auto& pairing : bug_map)
+        {
+            pair<int, int> cell = pairing.first;
+            list<Bug*> bug_list = pairing.second;
             if (bug_list.size() > 1)
             {
                 int maxSize = 0;
@@ -251,50 +261,33 @@ map<pair<int, int>, list<Bug*>> tapBugBoard(vector<Bug*>& bug_vector, map<pair<i
                         {
                             pBug->changeStatus();
                             maxBug->setSize(maxBug->getSize() + pBug->getSize());
+                            pBug->setKiller(maxBug);
+                            if (typeid(*pBug) == typeid(Crawler))
+                            {
+                                cout << "Crawler ";
+                            }
+                            else if (typeid(*pBug) == typeid(Hopper))
+                            {
+                                cout << "Hopper ";
+                            }
+                            cout << pBug->getID() << " has been eaten by ";
+                            if (typeid(*maxBug) == typeid(Crawler))
+                            {
+                                cout << "Crawler ";
+                            }
+                            else if (typeid(*maxBug) == typeid(Hopper))
+                            {
+                                cout << "Hopper ";
+                            }
+                            cout << maxBug->getID() << " on cell (" << cell.first << "," << cell.second << ")\n";
                         }
                     }
                 }
             }
-
-
-            
-
-
         }
-        cout << "\nAll bugs have moved!\n";
     }
     return bug_map;
 }
-
-//map<pair<int, int>, list<Bug*>> tapBugBoard(vector<Bug*>& bug_vector, map<pair<int, int>, list<Bug*>> bug_map)
-//{
-//    cout << "\nOption: Tap the Bug Board\n";
-//    if (bug_vector.empty())
-//    {
-//        cout << "\nThere are no bugs on the board!\n";
-//    }
-//    else
-//    {
-//        for (Bug* pBug : bug_vector)
-//        {
-//            // Before move, delete the bug from the cell
-//            pair<int, int> cell = pBug->getPosition();
-//            list<Bug*> bug_list = bug_map[cell];
-//            bug_list.remove(pBug);
-//            bug_map.insert_or_assign(cell, bug_list);
-//
-//            pBug->move();
-//
-//            // After move, add bug to the cell
-//            cell = pBug->getPosition();
-//            bug_list = bug_map[cell];
-//            bug_list.push_back(pBug);
-//            bug_map.insert_or_assign(cell, bug_list);
-//        }
-//        cout << "\nAll bugs have moved!\n";
-//    }
-//    return bug_map;
-//}
 
 void displayLifeHistory(vector<Bug*>& bug_vector)
 {
@@ -324,7 +317,7 @@ void displayLifeHistory(vector<Bug*>& bug_vector)
             }
             else
             {
-                cout << " Eaten by \n";
+                cout << " Eaten by " << pBug->getKiller()->getID() << "\n";
             }
         }
         cout << "(Total: " << bug_vector.size() << " bugs)\n";
@@ -403,22 +396,6 @@ void run()
 {
     vector<Bug*> bug_vector;
     map<pair<int, int>, list<Bug*>> bug_map;
-
-
-    /*for (const auto& pair : bug_map)
-    {
-        cout << pair.first.first << " "<<pair.first.second<<endl;
-        list<Bug*>l2 = pair.second;
-        for (Bug* p : l2)
-        {
-            cout << p->getID() << endl;
-        }
-    }
-    for (Bug* p : l2)
-    {
-        cout << p->getSize() << endl;
-    }*/
-    
 
     cout << "Welcome to the Bug Board!\n";
     int option;

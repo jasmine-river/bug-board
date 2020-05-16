@@ -13,40 +13,44 @@ Hopper::Hopper(int id = 1, int x = 0, int y = 0, int direction = 1, int size = 1
 // Functions
 void Hopper::move()
 {
-	if (isWayBlocked())
+	// Only move if alive
+	if (alive)
 	{
-		direction = rand() % 4 + 1;
-		Hopper::move();
-	}
-	else if (!canHopFullLength())
-	{
-		switch (direction)
+		if (isWayBlocked())
 		{
-		case 1:
-			position.second = 0; break;
-		case 2:
-			position.first = 10; break;
-		case 3:
-			position.second = 10; break;
-		case 4:
-			position.first = 0; break;
+			direction = rand() % 4 + 1;
+			Hopper::move();
 		}
-		path.push_back(position);
-	}
-	else
-	{
-		switch (direction)
+		else if (!canHopFullLength())
 		{
-		case 1:
-			position.second -= hopLength; break;
-		case 2:
-			position.first += hopLength; break;
-		case 3:
-			position.second += hopLength; break;
-		case 4:
-			position.first -= hopLength; break;
+			switch (direction)
+			{
+			case 1:
+				position.second = 0; break;
+			case 2:
+				position.first = 10; break;
+			case 3:
+				position.second = 10; break;
+			case 4:
+				position.first = 0; break;
+			}
+			path.push_back(position);
 		}
-		path.push_back(position);
+		else
+		{
+			switch (direction)
+			{
+			case 1:
+				position.second -= hopLength; break;
+			case 2:
+				position.first += hopLength; break;
+			case 3:
+				position.second += hopLength; break;
+			case 4:
+				position.first -= hopLength; break;
+			}
+			path.push_back(position);
+		}
 	}
 }
 

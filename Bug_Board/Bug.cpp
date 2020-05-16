@@ -80,11 +80,6 @@ string Bug::getStatusInText()
 	}
 }
 
-list<pair<int, int>> Bug::getPath()
-{
-	return path;
-}
-
 string Bug::getPathInText()
 {
 	string pathText;
@@ -95,6 +90,11 @@ string Bug::getPathInText()
 		position != path.back() ? (pathText += ",") : (pathText += "");
 	}
 	return pathText;
+}
+
+Bug* Bug::getKiller()
+{
+	return killer;
 }
 
 void Bug::setSize(int newSize)
@@ -123,4 +123,9 @@ void Bug::changeStatus()
 	{
 		alive = true;
 	}
+}
+
+void Bug::setKiller(Bug* pBug)
+{
+	killer = pBug;
 }

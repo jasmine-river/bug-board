@@ -11,6 +11,7 @@ protected:
 	pair<int, int> position;
 	bool alive;
 	list<pair<int, int>> path;
+	Bug* killer;
 
 public:
 	virtual void move() = 0;
@@ -25,8 +26,9 @@ public:
 	pair<int, int> getPosition();
 	string getPositionInBrackets();
 	string getStatusInText();
-	list<pair<int, int>> getPath();
 	string getPathInText();
+	Bug* getKiller();
 	void setSize(int);
 	void changeStatus();
+	void setKiller(Bug*);
 };
