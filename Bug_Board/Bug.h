@@ -17,11 +17,16 @@ public:
 	bool isWayBlocked();
 	Bug(int, int, int, int, int);
 
-	// Getters
+	// Getters & Setters
 	int getID();
 	int getSize();
+	int getDirection();
 	string getDirectionInText();
+	pair<int, int> getPosition();
 	string getPositionInBrackets();
 	string getStatusInText();
+	list<pair<int, int>> getPath();
 	string getPathInText();
+	void setSize(int);
+	void changeStatus();
 };

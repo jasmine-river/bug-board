@@ -27,7 +27,7 @@ Bug::Bug(int id = 1, int x = 0, int y = 0, int direction = 1, int size = 1)
 	path.push_back(position);
 }
 
-// Getters
+// Getters & Setters
 int Bug::getID()
 {
 	return id;
@@ -36,6 +36,11 @@ int Bug::getID()
 int Bug::getSize()
 {
 	return size;
+}
+
+int Bug::getDirection()
+{
+	return direction;
 }
 
 string Bug::getDirectionInText()
@@ -51,6 +56,11 @@ string Bug::getDirectionInText()
 	case 4:
 		return "West";
 	}
+}
+
+pair<int, int> Bug::getPosition()
+{
+	return position;
 }
 
 string Bug::getPositionInBrackets()
@@ -70,16 +80,47 @@ string Bug::getStatusInText()
 	}
 }
 
+list<pair<int, int>> Bug::getPath()
+{
+	return path;
+}
+
 string Bug::getPathInText()
 {
 	string pathText;
-	list<pair<int, int>>::iterator it;
-	for (it = path.begin(); it != path.end(); it++)
+	for (pair<int, int> position : path)
 	{
-		pathText += "(" + to_string(it->first) + "," + to_string(it->second) + ")";
+		pathText += "(" + to_string(position.first) + "," + to_string(position.second) + ")";
 
-		// Reference: https://dev-notes.eu/2018/07/first-&-last-element-in-c++-iterator-loop/
-		next(it) != path.end() ? (pathText += ",") : (pathText += "");
-	}	
+		position != path.back() ? (pathText += ",") : (pathText += "");
+	}
 	return pathText;
+}
+
+void Bug::setSize(int newSize)
+{
+	if (newSize > 20)
+	{
+		size = 20;
+	}
+	else if (newSize < 1)
+	{
+		size = 1;
+	}
+	else
+	{
+		size = newSize;
+	}
+}
+
+void Bug::changeStatus()
+{
+	if (alive)
+	{
+		alive = false;
+	}
+	else
+	{
+		alive = true;
+	}
 }
